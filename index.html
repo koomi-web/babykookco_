@@ -10,13 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Slackey&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* ปรับโทนสีตามความชอบ: ชมพู-น้ำตาล */
-            --color-pink-bg: #fff0f3;
-            --color-pink-dot: #ffdce5;
+            --color-pink-bg: #ffe4ef;
+            --color-pink-dot: #fff;
             --color-pink-dark: #ff85b3;
             --color-pink-light: #ffb8d1;
             --color-brown-dark: #5c3a21;
-            --color-brown-light: #8b5e3c;
+            --color-brown-light: #7b5338;
         }
 
         body {
@@ -29,47 +28,51 @@
             scroll-behavior: smooth;
         }
 
-        .font-slackey { font-family: 'Slackey', 'Mitr', cursive; }
-        .text-shadow-cute { text-shadow: 2px 2px 0px #fff, 3px 3px 0px var(--color-pink-light); }
+        .font-slackey {
+            font-family: 'Slackey', 'Mitr', cursive;
+        }
+
+        .text-shadow-cute {
+            text-shadow: 2px 2px 0px #fff, 3px 3px 0px var(--color-pink-light);
+        }
 
         .clean-box {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 40px;
-            box-shadow: 0 10px 40px rgba(139, 94, 60, 0.1);
-            border: 2px solid #fff;
+            box-shadow: 0 10px 40px rgba(255, 133, 179, 0.15);
         }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--color-pink-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--color-brown-light); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--color-pink-dark); border-radius: 10px; }
 
         .modal-enter { animation: modalFadeIn 0.3s ease-out forwards; }
         .modal-exit { animation: modalFadeOut 0.2s ease-in forwards; }
         
-        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes modalFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
-
-        .slider-track { display: flex; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide { min-width: 100%; }
-        
-        /* ปุ่มเส้นประที่ต้องคงไว้ */
-        .dashed-btn {
-            border: 2px dashed var(--color-pink-dark);
-            padding: 10px;
-            border-radius: 15px;
-            display: block;
-            text-align: center;
-            transition: all 0.3s;
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-        .dashed-btn:hover { background: var(--color-pink-bg); }
+        @keyframes modalFadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slide {
+            min-width: 100%;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-12">
 
     <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
 
-    <!-- Sidebar Menu 🎀 -->
+    <!-- Sidebar Menu 🎀 (คงไว้ตามเงื่อนไข) -->
     <div id="side-menu" class="fixed inset-y-0 left-0 w-64 bg-white/95 backdrop-blur-md shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-pink-200">
         <div class="p-5 h-full flex flex-col">
             <div class="flex justify-between items-center mb-6 border-b border-pink-100 pb-4">
@@ -80,179 +83,171 @@
             </div>
             <div class="space-y-3 font-medium text-[#5c3a21] flex-1">
                 <a href="#services" onclick="toggleMenu()" class="flex items-center gap-3 p-3 hover:bg-pink-50 rounded-xl transition text-[15px]">
-                    <span class="text-[#ff85b3]">✦</span> บริการ/เรทราคา
+                    <span class="text-[#ff85b3]"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6-6.2-4.5-6.2 4.5 2.4-7.6-6.2-4.5h7.6z"/></svg></span> บริการของเรา
                 </a>
-                <a href="#rules" onclick="toggleMenu()" class="flex items-center gap-3 p-3 hover:bg-pink-50 rounded-xl transition text-[15px]">
-                    <span class="text-[#ff85b3]">✦</span> ข้อตกลงการดีล
+                <a href="#portfolio" onclick="toggleMenu()" class="flex items-center gap-3 p-3 hover:bg-pink-50 rounded-xl transition text-[15px]">
+                    <span class="text-[#ff85b3]"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span> อัพเดทสินค้า
                 </a>
-                <a href="#shipping" onclick="toggleMenu()" class="flex items-center gap-3 p-3 hover:bg-pink-50 rounded-xl transition text-[15px]">
-                    <span class="text-[#ff85b3]">✦</span> รายละเอียดส่งกลับ
+                <a href="#pricing" onclick="toggleMenu()" class="flex items-center gap-3 p-3 hover:bg-pink-50 rounded-xl transition text-[15px]">
+                    <span class="text-[#ff85b3]"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg></span> เรทราคา & ข้อตกลง
                 </a>
                 <a href="#contact" onclick="toggleMenu()" class="flex items-center gap-3 p-3 hover:bg-pink-50 rounded-xl transition text-[15px]">
-                    <span class="text-[#ff85b3]">✦</span> ติดต่อสอบถาม
+                    <span class="text-[#ff85b3]"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span> ติดต่อเรา
                 </a>
             </div>
             <div class="mt-auto border-t border-pink-100 pt-4 text-center">
-                <p class="font-slackey text-xs text-pink-400 uppercase">babykookco</p>
+                <p class="font-slackey text-xs text-pink-400">BABYKOOKCO</p>
             </div>
         </div>
     </div>
 
-    <!-- Top Bar (Status Bar) -->
+    <!-- Top Bar (คงไว้ตามเงื่อนไข) -->
     <div class="w-full bg-white/90 backdrop-blur-md border-b border-pink-200 py-3 px-4 flex justify-between items-center text-[10px] sm:text-xs font-slackey text-pink-400 font-medium uppercase tracking-wider sticky top-0 z-30 shadow-sm">
         <div class="flex items-center gap-2 sm:gap-3">
             <button onclick="toggleMenu()" class="p-1.5 hover:bg-pink-100 rounded-md text-pink-500 transition-colors focus:outline-none cursor-pointer">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
             </button>
             <span>BABYKOOKCO ></span>
-            <span class="text-pink-300 hidden sm:inline">> CHECK QUEUE</span>
+            <span class="text-pink-300 hidden sm:inline">></span>
         </div>
         <div class="flex items-center gap-4">
             <span class="flex items-center gap-1">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-                OPEN FOR DEAL
+                NO COPY
             </span>
+            <span class="hidden sm:inline border-l border-pink-200 pl-4">DO NOT STEAL</span>
         </div>
     </div>
-    <main class="max-w-2xl mx-auto mt-6 sm:mt-10 px-4 relative z-0">
-        <div class="clean-box p-6 sm:p-10 z-0">
-            
-            <!-- Header Section (คงโครงสร้างเดิม 100%) -->
-            <div class="text-center mb-8 relative flex flex-col items-center">
-                <!-- Badges (ปุ่มกลมเล็กๆ ด้านบนที่ต้องคงไว้) -->
-                <div class="absolute -top-4 flex gap-2">
-                    <span class="w-3 h-3 rounded-full bg-[#ffb8d1] animate-ping"></span>
-                    <span class="w-3 h-3 rounded-full bg-[#8b5e3c]"></span>
-                    <span class="w-3 h-3 rounded-full bg-[#ff85b3]"></span>
-                </div>
 
-                <!-- Profile Picture -->
+    <main class="max-w-2xl mx-auto mt-6 sm:mt-10 px-4 relative z-0">
+        <div class="clean-box p-6 sm:p-10 z-0 border border-white">
+            
+            <!-- Header Section (คงโครงสร้าง 100%) -->
+            <div class="text-center mb-8 relative flex flex-col items-center">
+                <svg class="absolute top-2 left-2 sm:left-10 w-6 h-6 text-[#ff85b3] animate-pulse" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C12 0 12 10 22 12C12 14 12 24 12 24C12 24 12 14 2 12C12 10 12 0 12 0Z" /></svg>
+                <svg class="absolute top-6 right-4 sm:right-12 w-5 h-5 text-[#ffb8d1] animate-bounce" style="animation-duration: 2.5s;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6-6.2-4.5-6.2 4.5 2.4-7.6-6.2-4.5h7.6z"/></svg>
+
+                <!-- Profile Picture (เปลี่ยนเป็นรูปที่แจ้ง) -->
                 <div class="relative w-28 h-28 sm:w-32 sm:h-32 mb-2 group">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-[#ff85b3] to-[#8b5e3c] rounded-full opacity-40 blur-md group-hover:opacity-60 transition duration-300"></div>
-                    <!-- เปลี่ยนรูปโปรไฟล์ -->
-                    <img src="https://i.pinimg.com/736x/89/90/48/899048ab0cc455154006fdb9676964b3.jpg" alt="babykookco" class="relative w-full h-full object-cover rounded-full border-4 border-white shadow-md z-10 transition-transform duration-300 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-[#ff85b3] to-[#ffb8d1] rounded-full opacity-40 blur-md group-hover:opacity-60 transition duration-300"></div>
+                    <img src="139_20260511163239.PNG" alt="babykookco" class="relative w-full h-full object-cover rounded-full border-4 border-white shadow-md z-10 transition-transform duration-300 group-hover:scale-105">
+                    <div class="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-sm z-20 border border-pink-100">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff85b3"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
                 </div>
 
                 <h1 class="font-slackey text-4xl sm:text-5xl font-bold text-[#ff85b3] text-shadow-cute mb-3 tracking-wide mt-3">babykookco</h1>
-                <h2 class="font-slackey text-base text-[#5c3a21] bg-[#ffe4ef] inline-block px-6 py-1.5 rounded-full shadow-sm">
-                    รับดีลการ์ดเกาหลี | ชิปปิ้งเกาหลี-อเมริกา
-                </h2>
+                <h2 class="font-slackey text-xl text-[#5c3a21] bg-[#ffe4ef] inline-block px-6 py-1.5 rounded-full shadow-sm">Welcome to my shop</h2>
+            </div>
+
+            <!-- Status Bar & Buttons (ส่วนสำคัญที่ต้องคงไว้) -->
+            <div class="mb-8 flex flex-col gap-3">
+                 <div class="w-full bg-pink-50 border-2 border-dashed border-pink-300 rounded-2xl p-4 text-center">
+                    <span class="text-sm font-medium text-[#7b5338]">เช็คคิวงาน / สถานะปัจจุบัน</span>
+                 </div>
             </div>
 
             <!-- Image Slider Section -->
-            <div class="mb-10 relative rounded-3xl overflow-hidden shadow-md group border-4 border-white">
+            <div class="mb-10 relative rounded-3xl overflow-hidden shadow-md group">
                 <div class="slider-track" id="slider-track">
+                    <div class="slide bg-gradient-to-r from-pink-200 to-pink-100 h-40 sm:h-56 flex flex-col items-center justify-center text-center p-4">
+                        <span class="font-slackey text-2xl sm:text-3xl text-[#5c3a21] mb-2">รับดีลการ์ดเกาหลี</span>
+                        <span class="text-sm text-[#7b5338] bg-white/50 px-4 py-1 rounded-full">เรทดีที่สุด 0.029 - 0.030</span>
+                    </div>
                     <div class="slide bg-gradient-to-r from-[#ffe4ef] to-[#ffb8d1] h-40 sm:h-56 flex flex-col items-center justify-center text-center p-4">
-                        <span class="font-slackey text-2xl sm:text-3xl text-[#5c3a21] mb-2">เรทดีล 0.029 - 0.030</span>
-                        <span class="text-sm text-[#7b5338] bg-white/50 px-4 py-1 rounded-full">รับทุกวง / ดีลตุ๊กตา / กู๊ดต่างๆ</span>
-                    </div>
-                    <div class="slide bg-gradient-to-r from-pink-100 to-[#ffe4ef] h-40 sm:h-56 flex flex-col items-center justify-center text-center p-4">
-                        <span class="font-slackey text-2xl sm:text-3xl text-[#5c3a21] mb-2">ชิปปิ้งเกาหลี ขีดละ 45฿</span>
-                        <span class="text-sm text-[#7b5338] bg-white/50 px-4 py-1 rounded-full">ปิดกล่องทุกวันจันทร์</span>
+                        <span class="font-slackey text-2xl sm:text-3xl text-[#5c3a21] mb-2">ชิปปิ้งเกาหลี-อเมริกา</span>
+                        <span class="text-sm text-[#7b5338] bg-white/50 px-4 py-1 rounded-full">เริ่มต้นขีดละ 45.-</span>
                     </div>
                 </div>
-                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots">
-                    <button class="w-4 h-2 rounded-full bg-[#ff85b3] transition-all"></button>
-                    <button class="w-2 h-2 rounded-full bg-white/60 transition-all"></button>
-                </div>
+                <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 text-[#ff85b3] w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 text-[#ff85b3] w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+
+            <!-- Intro Section -->
+            <div id="services" class="text-center mb-10 bg-[#fff0f5] p-6 rounded-2xl border border-pink-100 shadow-sm">
+                <p class="text-[15px] sm:text-base leading-relaxed text-[#5c3a21]">
+                    รับดีลการ์ดเกาหลี ทุกวง ดีลตุ๊กตา กู๊ดต่างๆ ชิปปิ้งเกาหลี<br>
+                    <span class="text-[#ff85b3] font-semibold text-lg mt-1 inline-block">เรท 0.029 - 0.030</span>
+                </p>
             </div>
 
             <!-- Services Section -->
-            <div id="services" class="mb-10">
-                <h3 class="font-slackey text-2xl font-semibold mb-4 flex items-center gap-2 text-[#8b5e3c]">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6-6.2-4.5-6.2 4.5 2.4-7.6-6.2-4.5h7.6z"/></svg>
-                    งานที่รับ & เรทราคา
+            <div class="mb-10">
+                <h3 class="font-slackey text-2xl font-semibold mb-4 flex items-center gap-2 text-[#ff85b3]">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                    งานที่รับ
                 </h3>
-                <div class="grid grid-cols-1 gap-3 text-[15px]">
-                    <div class="bg-white border-2 border-pink-100 p-4 rounded-2xl flex justify-between items-center shadow-sm">
-                        <span>ดีลการ์ด (ทุกวง)</span>
-                        <span class="font-bold text-[#ff85b3]">0.029 - 0.030</span>
-                    </div>
-                    <div class="bg-white border-2 border-pink-100 p-4 rounded-2xl flex justify-between items-center shadow-sm">
-                        <span>ชิปปิ้งเกาหลี (ปิดจันทร์)</span>
-                        <span class="font-bold text-[#ff85b3]">ขีดละ 45฿</span>
-                    </div>
-                    <div class="bg-white border-2 border-pink-100 p-4 rounded-2xl flex justify-between items-center shadow-sm">
-                        <span>ฝากหาการ์ด</span>
-                        <span class="font-bold text-[#ff85b3]">เรท 0.030</span>
-                    </div>
-                    <div class="bg-white border-2 border-pink-100 p-4 rounded-2xl flex justify-between items-center shadow-sm">
-                        <span>ดีลอเมริกา</span>
-                        <span class="font-bold text-[#ff85b3]">เรท 36</span>
+                <ul class="space-y-3 text-[15px] sm:text-base text-[#5c3a21]">
+                    <li class="flex items-center gap-3 bg-pink-50/50 p-3 rounded-xl">🌷 ดีลการ์ด เรท 0.029 - 0.030</li>
+                    <li class="flex items-center gap-3 bg-pink-50/50 p-3 rounded-xl">🚢 ชิปปิ้งเกาหลี ขีดละ 45฿</li>
+                    <li class="flex items-center gap-3 bg-pink-50/50 p-3 rounded-xl">🔍 ฝากหาการ์ด เรท 0.030</li>
+                </ul>
+            </div>
+
+            <!-- Portfolio/Updates (ปรับเป็นปุ่มลิงก์สำคัญ) -->
+            <div id="portfolio" class="mb-10 bg-[#5c3a21] rounded-2xl p-6 text-center shadow-md relative overflow-hidden">
+                <h3 class="font-slackey text-white text-2xl font-medium mb-5">Link สำคัญ</h3>
+                <div class="flex flex-col gap-3">
+                    <a href="https://docs.google.com/spreadsheets/d/1VoawwzHcnERa7SBsfKFh7d6maqz7KpGIQFyWjWejXD0/edit?usp=drivesdk" target="_blank" class="bg-[#ff85b3] text-white px-6 py-3 rounded-xl hover:bg-white hover:text-[#ff85b3] transition duration-300 text-sm font-medium border-2 border-[#ff85b3]">📂 อัพเดทสินค้า (Sheet)</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfpmTQ3z04gDLAXzCOj_ADzcg0pWmLk0ZfjNoD2QGAG6ZYbjA/viewform?" target="_blank" class="bg-[#ffb8d1] text-[#5c3a21] px-6 py-3 rounded-xl hover:bg-white transition duration-300 text-sm font-medium border-2 border-[#ffb8d1]">📂 ฟอร์มฝากหา</a>
+                    <a href="https://forms.gle/8p4iaji2o9GDkGkA7?fbclid=..." target="_blank" class="bg-white text-[#5c3a21] px-6 py-3 rounded-xl hover:bg-pink-100 transition duration-300 text-sm font-medium border-2 border-white">💌 ชำระส่วนที่เหลือ</a>
+                </div>
+            </div>
+
+            <!-- Pricing & Conditions -->
+            <div id="pricing" class="mb-10">
+                <div class="bg-white rounded-2xl p-6 border border-pink-100 shadow-sm">
+                    <h3 class="text-center font-slackey text-2xl text-[#5c3a21] mb-4">เรทราคา & ข้อตกลง</h3>
+                    
+                    <div class="space-y-4 text-[14px]">
+                        <div class="bg-pink-50 p-4 rounded-xl border-l-4 border-[#ff85b3]">
+                            <p class="font-bold text-[#5c3a21]">💳 ดีลส่งลิ้งค์ เรท 0.030</p>
+                            <p class="text-[#7b5338] mt-1">— ลูกค้าส่งลิ้งค์ทางแชต พร้อมแจ้งใบที่ต้องการ ร้านเป็นเพียงตัวกลาง หากโดนโกงคืนแค่ส่วนต่าง</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-xl border-l-4 border-[#ff85b3]">
+                            <p class="font-bold text-[#5c3a21]">💖 การ์ดดีลแล้ว เรท 0.029 - 0.030</p>
+                            <p class="text-[#7b5338] mt-1">— หากโดนโกงคืนเงิน 50% รับมัดจำ 50% จ่ายส่วนที่เหลือภายใน 1 สัปดาห์</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-xl border-l-4 border-[#ff85b3]">
+                            <p class="font-bold text-[#5c3a21]">🇺🇸 กดเว็บ/ดีลอเมริกา เรท 36</p>
+                            <p class="text-[#7b5338] mt-1">— ไม่รวมภาษี (ปกติ 4-5$) ค่าส่งกลับขีดละ 90.-</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ปุ่มเส้นประ (คงไว้ตามเงื่อนไข) -->
-            <div class="space-y-3 mb-10">
-                <a href="https://drive.google.com/file/d/1rlo7UQwcaNYXAzvmNTC-5wkbLNyOQFgi/view?usp=drivesdk" target="_blank" class="dashed-btn font-medium text-[#5c3a21]">
-                    📂 ฟอร์มฝากหาการ์ด (คลิกที่นี่)
-                </a>
-                <a href="https://drive.google.com/file/d/1afX4-r1D2H2EatrHQrWD3NzgmHCPuw6v/view?usp=drivesdk" target="_blank" class="dashed-btn font-medium text-[#5c3a21]">
-                    💌 ชำระเงินส่วนที่เหลือ (คลิกที่นี่)
-                </a>
-            </div>
-
-            <!-- ข้อตกลงการซื้อขาย (Rules) -->
-            <div id="rules" class="mb-10 bg-[#fff5f8] p-6 rounded-3xl border border-pink-100">
-                <h3 class="font-slackey text-xl mb-4 text-[#8b5e3c]">ข้อตกลงในการซื้อ-ขาย</h3>
-                <div class="space-y-4 text-sm text-[#5c3a21]">
-                    <div class="bg-white/60 p-3 rounded-xl">
-                        <p class="font-bold mb-1">• ดีลส่งลิงก์ (เรท 0.030)</p>
-                        <p>ส่งลิงก์ทางแชทพร้อมแจ้งใบที่ต้องการ ร้านเป็นเพียงตัวกลาง หากโดนโกงคืนเฉพาะส่วนต่างเท่านั้น</p>
-                    </div>
-                    <div class="bg-white/60 p-3 rounded-xl">
-                        <p class="font-bold mb-1">• การ์ดที่ร้านดีลเอง (เรท 0.029-0.030)</p>
-                        <p>มัดจำ 50% จ่ายที่เหลือใน 1 สัปดาห์ ของถึงไทยต้องปิดยอด หากโดนโกงคืนเงิน 50%</p>
-                    </div>
-                    <div class="bg-white/60 p-3 rounded-xl border-l-4 border-red-300">
-                        <p class="font-bold text-red-500 mb-1">กรณีต้นทางโกง</p>
-                        <p>- ส่งลิงก์ดีล: คืนเฉพาะส่วนต่างที่ลูกค้าชำระมา</p>
-                        <p>- ดีลแล้ว: คืนเงิน 50% (ถือว่าเราโดนร่วมกัน) **เช็คบัญชีให้ทุกครั้งก่อนโอน**</p>
-                    </div>
+            <!-- Rules -->
+            <div class="mb-10">
+                <h3 class="font-slackey text-2xl font-semibold mb-4 text-[#5c3a21]">กฎ & การชำระรอบสอง</h3>
+                <div class="bg-[#f9f9f9] p-5 rounded-2xl text-[14px] space-y-3 border border-gray-100 text-[#5c3a21] leading-relaxed">
+                    <p>• <b>ชำระรอบสอง:</b> ค่าส่งกลับ + ในไทย (ซอง 40.- / อัลบั้ม ขีดละ 45.-)</p>
+                    <p>• <b>ระยะเวลารอ:</b> เกาหลี 7-14 วัน / อเมริกา 7-10 วัน</p>
+                    <p>• <b>กรณีโกง:</b> เช็คบัญชีคนขายให้ทุกครั้งก่อนโอน คืนเงินตามเงื่อนไขที่แจ้งด้านบน</p>
+                    <p>• <b>ตำหนิ:</b> ไม่รับผิดชอบความเสียหายจากการขนส่ง แต่รับผิดชอบหากเกิดจากการแพ็คของร้าน (ต้องมี VDO)</p>
                 </div>
             </div>
 
-            <!-- Shipping Details -->
-            <div id="shipping" class="mb-10">
-                <h3 class="font-slackey text-xl mb-4 text-[#5c3a21]">รายละเอียดรอบส่งกลับ</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-white p-4 rounded-2xl border-2 border-pink-100 shadow-sm">
-                        <p class="font-slackey text-[#ff85b3]">KOREA 🇰🇷</p>
-                        <p class="text-xs mt-1">ปิดกล่อง: จันทร์ / ส่งออก: พุธ</p>
-                        <p class="text-xs font-bold text-[#8b5e3c]">รอประมาณ 7-14 วัน</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl border-2 border-pink-100 shadow-sm">
-                        <p class="font-slackey text-[#ff85b3]">USA 🇺🇸</p>
-                        <p class="text-xs mt-1">ปิดกล่อง: ศุกร์ / ส่งออก: จันทร์</p>
-                        <p class="text-xs font-bold text-[#8b5e3c]">รอประมาณ 7-10 วัน</p>
-                    </div>
-                </div>
-                <div class="mt-4 bg-[#fff0f5] p-4 rounded-2xl text-[13px] text-[#5c3a21]">
-                    <p class="font-bold mb-1">ชำระรอบสอง (ค่าส่งกลับ + ค่าส่งในไทย)</p>
-                    <p>• การ์ดซองละ 40.-</p>
-                    <p>• อัลบั้ม/อื่นๆ ขีดละ 45.-</p>
-                    <p>• ดีลอินโด (คิดตามจริง) / ดีลอเมริกา (ขีดละ 90.-)</p>
-                </div>
-            </div>
-
-            <!-- Footer / Contact -->
+            <!-- Contact Section -->
             <div id="contact" class="mt-12 pt-8 border-t border-pink-100 text-center">
-                <h3 class="font-slackey text-2xl text-[#5c3a21] mb-5">ช่องทางการติดต่อ</h3>
+                <h3 class="font-slackey text-2xl text-[#5c3a21] mb-5">📱 ช่องทางติดต่อ</h3>
                 <div class="flex justify-center gap-5 mb-8">
-                    <a href="https://x.com/babykookco_?s=21" target="_blank" class="w-12 h-12 rounded-full bg-[#ffe4ef] text-[#ff85b3] flex items-center justify-center hover:bg-[#ff85b3] hover:text-white transition shadow-sm">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    <a href="https://x.com/babykookco_?s=21" target="_blank" class="w-14 h-14 rounded-full bg-[#ffe4ef] text-[#ff85b3] flex items-center justify-center hover:bg-[#ff85b3] hover:text-white transition duration-300 shadow-md">
+                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
-                    <a href="https://line.me/ti/p/LfBtdhlrVa" target="_blank" class="w-12 h-12 rounded-full bg-[#ffe4ef] text-[#ff85b3] flex items-center justify-center hover:bg-[#ff85b3] hover:text-white transition shadow-sm">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M22 10.5c0-4.14-4.48-7.5-10-7.5S2 6.36 2 10.5c0 3.73 3.61 6.87 8.35 7.4.29.04.68.12.78.36.1.22.05.57.02.8l-.13.8c-.04.22-.19.92.81.5 1.01-.42 5.43-3.2 7.42-5.48C21.05 13.63 22 12.16 22 10.5z"/></svg>
+                    <a href="https://line.me/ti/p/LfBtdhlrVa" target="_blank" class="w-14 h-14 rounded-full bg-[#ffe4ef] text-[#ff85b3] flex items-center justify-center hover:bg-[#ff85b3] hover:text-white transition duration-300 shadow-md">
+                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M22 10.5c0-4.14-4.48-7.5-10-7.5S2 6.36 2 10.5c0 3.73 3.61 6.87 8.35 7.4.29.04.68.12.78.36.1.22.05.57.02.8l-.13.8c-.04.22-.19.92.81.5 1.01-.42 5.43-3.2 7.42-5.48C21.05 13.63 22 12.16 22 10.5z"/></svg>
                     </a>
                 </div>
-                <p class="text-xs text-[#ff85b3] tracking-widest font-medium">THANK YOU FOR TRUSTING BABYKOOKCO</p>
+                <p class="text-xs text-[#ff85b3] tracking-widest font-medium uppercase">Thank you for choosing babykookco</p>
             </div>
+
         </div>
     </main>
+
     <script>
         function toggleMenu() {
             const menu = document.getElementById('side-menu');
@@ -270,22 +265,24 @@
 
         let currentSlide = 0;
         const track = document.getElementById('slider-track');
-        const dots = document.querySelectorAll('#slider-dots button');
-        
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
         function updateSlider() {
             track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('bg-[#ff85b3]', i === currentSlide);
-                dot.classList.toggle('w-4', i === currentSlide);
-                dot.classList.toggle('bg-white/60', i !== currentSlide);
-                dot.classList.toggle('w-2', i !== currentSlide);
-            });
         }
 
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % 2;
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
             updateSlider();
-        }, 4000);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        setInterval(nextSlide, 4000);
     </script>
 </body>
 </html>
