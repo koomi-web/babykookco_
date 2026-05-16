@@ -195,7 +195,7 @@
                 </h3>
                 <p class="text-xs text-[#7b5338] mb-6">กดสั่งซื้อได้เลยนะคะ</p>
 
-                <div id="dynamicStockContainer" class="space-y-6">
+                <div id="dynamicStockContainer" class="space-y-4">
                     <div class="text-center py-6 text-sm text-[#7b5338]">
                         <div class="animate-spin inline-block w-6 h-6 border-2 border-[#ff85b3] border-t-transparent rounded-full mb-1"></div>
                         <p>กำลังโหลดสินค้าจากสต๊อก...</p>
@@ -669,9 +669,9 @@
         // ดึงข้อมูลชีตเมื่อเบราว์เซอร์เปิดเว็บ
         fetchPreOrderSheet();
 
-        // ==========================================
-        //  โค้ดระบบดึงข้อมูล "ตะกร้าสินค้าที่ว่าง (Stock)" จาก Google Sheets (V1.0)
-        // ==========================================
+        // =========================================================================
+        //  โค้ดระบบดึงข้อมูล "ตะกร้าสินค้าที่ว่าง (Stock)" - ซ่อมแก้คำว่า เมมเบอร์: undefined
+        // =========================================================================
         const stockAsJsonUrl = "https://docs.google.com/spreadsheets/d/1LxNRR_2qh3NvLsO5LOSCSND4zqHUbCA0WbCok953-oA/gviz/tq?tqx=out:json&sheet=Sheet1";
 
         async function fetchStockSheet() {
@@ -693,55 +693,58 @@
                 rows.forEach(row => {
                     const cells = row.c;
                     // ดึงค่าตามคอลัมน์ของคุณ: title (0), image_url (1), single_price (2), pair_price (3), member (4), stock_quantity (5), status (6)
-                    const title = cells[0] ? cells[0].v : 'ไม่มีชื่อสินค้า';
-                    const imageUrl = cells[1] ? cells[1].v : '';
-                    const singlePrice = cells[2] ? parseFloat(cells[2].v) : 0;
-                    const pairPrice = cells[3] ? parseFloat(cells[3].v) : null;
-                    const memberName = cells[4] ? String(cells[4].v).trim() : '-'; // เปลี่ยนมารับค่าเป็นข้อความชื่อเมมเบอร์แทนตัวเลขราคา
-                    const stockQuantity = cells[5] ? parseInt(cells[5].v) : 0;
-                    const status = cells[6] ? String(cells[6].v).toLowerCase().trim() : 'active';
+                    const title = cells[0] && cells[0].v !== null ? cells[0].v : 'ไม่มีชื่อสินค้า';
+                    const imageUrl = cells[1] && cells[1].v !== null ? cells[1].v : '';
+                    const singlePrice = cells[2] && cells[2].v !== null ? parseFloat(cells[2].v) : 0;
+                    const pairPrice = cells[3] && cells[3].v !== null ? parseFloat(cells[3].v) : 0;
+                    
+                    // ซ่อมส่วนดึงชื่อเมมเบอร์: หากค่าเป็น null หรือว่างเปล่า ให้แสดงเป็นเครื่องหมาย "-" ป้องกันปัญหาเกิดข้อความ undefined
+                    const memberName = cells[4] && cells[4].v !== null ? String(cells[4].v).trim() : '-'; 
+                    
+                    const stockQuantity = cells[5] && cells[5].v !== null ? parseInt(cells[5].v) : 0;
+                    const status = cells[6] && cells[6].v !== null ? String(cells[6].v).toLowerCase().trim() : 'active';
 
                     // ตรวจเช็คสถานะปิดใช้งาน หรือคัดออกถ้าตรงตามเงื่อนไข
                     if (status === 'หมด' || status === 'private' || status === 'close') return;
 
                     const isOutOfStock = stockQuantity <= 0;
                     
-                    let stockBadge = `<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[10px] font-medium flex-shrink-0">✓ พร้อมส่ง (เหลือ ${stockQuantity})</span>`;
-                    if (isOutOfStock) {
-                        stockBadge = `<span class="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-full text-[10px] font-medium flex-shrink-0">⚠️ สินค้าหมด</span>`;
-                    }
-
-                    // สร้างชุดปุ่มคำสั่งซื้อตามข้อมูลราคาที่มีจริง
-                    let actionButtonsHTML = '';
-                    if (isOutOfStock) {
-                        actionButtonsHTML = `<button type="button" disabled class="px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-xl text-xs text-gray-400 font-medium cursor-not-allowed">❌ สินค้าหมดชั่วคราว</button>`;
-                    } else {
-                        actionButtonsHTML += `<button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${singlePrice}, 1, 'แยก 1 ใบ')" class="px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5c3a21] hover:border-[#ff85b3] hover:bg-pink-50 transition cursor-pointer font-medium font-sans">👤 ซื้อแยกใบ (${singlePrice}฿)</button>`;
-                        if (pairPrice && pairPrice > 0) {
-                            actionButtonsHTML += ` <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${pairPrice}, 1, 'เหมาคู่')" class="px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5c3a21] hover:border-[#ff85b3] hover:bg-pink-50 transition cursor-pointer font-medium font-sans">👥 ซื้อเหมาคู่ (${pairPrice}฿)</button>`;
-                        }
-                    }
-
+                    // ปรับ Layout แบบ Mobile-Friendly แนวตั้งที่มีช่องข้อมูลเรียงลงมาและมีปุ่มเลือกอยู่ด้านขวาเหมือนภาพแคปของคุณ
                     const itemCardHTML = `
-                        <div class="bg-pink-50/20 border border-pink-100 rounded-2xl p-4 flex flex-col md:flex-row gap-4">
-                            <div class="w-full md:w-32 h-32 bg-white rounded-xl overflow-hidden border border-pink-100 flex-shrink-0">
-                                <img src="${imageUrl || 'https://via.placeholder.com/150'}" class="w-full h-full object-cover" alt="${title}">
+                        <div class="bg-white border border-pink-100 rounded-2xl p-4 flex gap-3 items-center shadow-xs">
+                            <div class="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-200/60 text-center px-1">
+                                ${imageUrl ? `<img src="${imageUrl}" class="w-full h-full object-cover" alt="${title}">` : `<span class="text-[11px] text-gray-400 font-medium">No Image</span>`}
                             </div>
-                            <div class="flex-1 flex flex-col justify-between">
-                                <div>
-                                    <div class="flex justify-between items-start gap-2">
-                                        <h4 class="font-bold text-base text-[#5c3a21]">${title}</h4>
-                                        ${stockBadge}
+                            
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-bold text-[13px] text-[#5c3a21] truncate mb-1">${title}</h4>
+                                <p class="text-[11px] text-[#7b5338] mb-0.5">คงเหลือ ${stockQuantity} ชิ้น</p>
+                                
+                                <div class="space-y-1">
+                                    <div class="border border-pink-200/80 bg-white px-2.5 py-0.5 rounded-lg flex justify-between items-center max-w-[140px]">
+                                        <span class="text-[11px] text-pink-400">เดี่ยว :</span>
+                                        <span class="text-[11px] font-mono font-semibold text-pink-500">${singlePrice}฿</span>
                                     </div>
-                                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#7b5338] mt-2">
-                                        <span class="text-rose-500 font-medium bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md">⭐ เมมเบอร์: <b>${memberName}</b></span>
-                                        <span>ราคาปกติ: <span class="text-[#ff85b3] font-bold">${singlePrice}.-</span> ฿</span>
-                                        ${pairPrice ? `<span>ราคาคู่: <span class="text-[#ff85b3] font-bold">${pairPrice}.-</span> ฿</span>` : ''}
+                                    <div class="border border-pink-200/80 bg-white px-2.5 py-0.5 rounded-lg flex justify-between items-center max-w-[140px]">
+                                        <span class="text-[11px] text-pink-400">คู่ :</span>
+                                        <span class="text-[11px] font-mono font-semibold text-pink-500">${pairPrice > 0 ? pairPrice + '฿' : '0฿'}</span>
+                                    </div>
+                                    <div class="border border-pink-200/80 bg-white px-2.5 py-0.5 rounded-lg flex justify-between items-center max-w-[140px]">
+                                        <span class="text-[11px] text-pink-400">เมม :</span>
+                                        <span class="text-[11px] font-medium text-pink-500 truncate pl-1">${memberName}</span>
                                     </div>
                                 </div>
-                                <div class="mt-3 flex flex-wrap gap-2">
-                                    ${actionButtonsHTML}
-                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5 justify-center">
+                                ${isOutOfStock ? `
+                                    <button type="button" disabled class="px-3 py-1.5 bg-gray-100 text-gray-400 rounded-xl text-xs font-semibold cursor-not-allowed">หมด</button>
+                                ` : `
+                                    <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${singlePrice}, 1, 'แยกใบ (เดี่ยว)')" class="px-3 py-1.5 bg-[#ff85b3] text-white hover:bg-[#ff6b9e] rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer">เลือก</button>
+                                    ${pairPrice > 0 ? `
+                                        <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${pairPrice}, 1, 'เหมา (คู่)')" class="px-3 py-1.5 bg-[#ffb8d1] text-[#5c3a21] hover:bg-[#ff85b3] hover:text-white rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer">เลือกคู่</button>
+                                    ` : ''}
+                                `}
                             </div>
                         </div>
                     `;
@@ -758,7 +761,7 @@
         fetchStockSheet();
 
         // ==========================================
-        //  โค้ดระบบแจ้งชำระเงินและแจ้งสลิป (ใส่ลิงก์ปัจจุบันของคุณแล้ว)
+        //  โค้ดระบบแจ้งชำระเงินและแจ้งสลิป
         // ==========================================
         const scriptUrl = "https://script.google.com/macros/s/AKfycbyQeAnJ6YJ8YheKQHFEzD8Q17uBzq-p1r61xb3GQgDmU7eYJDlJRl486Bj_07szp0jJ3g/exec";
         let base64Slip = "";
@@ -848,7 +851,6 @@
             }
         }
 
-        // ฟังก์ชันสำหรับคัดลอกเลขบัญชีอัตโนมัติ
         function copyAccountNumber() {
             const accountNumber = "136-3-09572-7";
             const copyBtn = document.getElementById('copyBtn');
