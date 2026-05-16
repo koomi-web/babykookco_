@@ -72,7 +72,6 @@
 
     <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
 
-    <!-- Sidebar Menu 🎀 -->
     <div id="side-menu" class="fixed inset-y-0 left-0 w-64 bg-white/95 backdrop-blur-md shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-pink-200">
         <div class="p-5 h-full flex flex-col">
             <div class="flex justify-between items-center mb-6 border-b border-pink-100 pb-4">
@@ -101,7 +100,6 @@
         </div>
     </div>
 
-    <!-- Top Bar -->
     <div class="w-full bg-white/90 backdrop-blur-md border-b border-pink-200 py-3 px-4 flex justify-between items-center text-[10px] sm:text-xs font-slackey text-pink-400 font-medium uppercase tracking-wider sticky top-0 z-30 shadow-sm">
         <div class="flex items-center gap-2 sm:gap-3">
             <button onclick="toggleMenu()" class="p-1.5 hover:bg-pink-100 rounded-md text-pink-500 transition-colors focus:outline-none cursor-pointer">
@@ -126,12 +124,10 @@
     <main class="max-w-2xl mx-auto mt-6 sm:mt-10 px-4 relative z-0">
         <div class="clean-box p-6 sm:p-10 z-0 border border-white">
             
-            <!-- Header Section -->
             <div class="text-center mb-8 relative flex flex-col items-center">
                 <svg class="absolute top-2 left-2 sm:left-10 w-6 h-6 text-[#ff85b3] animate-pulse" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C12 0 12 10 22 12C12 14 12 24 12 24C12 24 12 14 2 12C12 10 12 0 12 0Z" /></svg>
                 <svg class="absolute top-6 right-4 sm:right-12 w-5 h-5 text-[#ffb8d1] animate-bounce" style="animation-duration: 2.5s;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6-6.2-4.5-6.2 4.5 2.4-7.6-6.2-4.5h7.6z"/></svg>
 
-                <!-- Profile Picture -->
                 <div class="relative w-28 h-28 sm:w-32 sm:h-32 mb-2 group">
                     <div class="absolute inset-0 bg-gradient-to-tr from-[#ff85b3] to-[#ffb8d1] rounded-full opacity-40 blur-md group-hover:opacity-60 transition duration-300"></div>
                     <img src="https://i.postimg.cc/66hFQtpg/mi-m-ch-x-139-2026-0511163239.png" alt="babykookco" class="relative w-full h-full object-cover rounded-full border-4 border-white shadow-md z-10 transition-transform duration-300 group-hover:scale-105">
@@ -144,14 +140,12 @@
                 <h2 class="font-slackey text-xl text-[#5c3a21] bg-[#ffe4ef] inline-block px-6 py-1.5 rounded-full shadow-sm">Welcome to my shop</h2>
             </div>
 
-            <!-- Status Bar & Buttons -->
             <div class="mb-8 flex flex-col gap-3">
                  <div class="w-full bg-pink-50 border-2 border-dashed border-pink-300 rounded-2xl p-4 text-center">
                     <span class="text-sm font-medium text-[#7b5338]">เปิด 09:00 - 00:00 </span>
                  </div>
             </div>
 
-            <!-- Image Slider Section -->
             <div class="mb-10 relative rounded-3xl overflow-hidden shadow-md group">
                 <div class="slider-track" id="slider-track">
                     <div class="slide bg-gradient-to-r from-pink-200 to-pink-100 h-40 sm:h-56 flex flex-col items-center justify-center text-center p-4">
@@ -167,7 +161,6 @@
                 <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 text-[#ff85b3] w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
             </div>
 
-            <!-- Intro Section -->
             <div id="services" class="text-center mb-10 bg-[#fff0f5] p-6 rounded-2xl border border-pink-100 shadow-sm">
                 <p class="text-[15px] sm:text-base leading-relaxed text-[#5c3a21]">
                     รับดีลการ์ดเกาหลี ทุกวง ดีลตุ๊กตา กู๊ดต่างๆ ชิปปิ้งเกาหลี<br>
@@ -175,7 +168,6 @@
                 </p>
             </div>
 
-            <!-- Services Section -->
             <div class="mb-10">
                 <h3 class="font-slackey text-2xl font-semibold mb-4 flex items-center gap-2 text-[#ff85b3]">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
@@ -188,7 +180,43 @@
                 </ul>
             </div>
 
-            <!-- Portfolio/Updates -->
+            <div class="mb-10 bg-white rounded-2xl border border-pink-200 p-5 shadow-sm">
+                <h3 class="font-slackey text-2xl font-semibold mb-2 flex items-center gap-2 text-[#ff85b3]">
+                    📦 Tracking สินค้า
+                </h3>
+                <p class="text-xs text-[#7b5338] mb-4">กรอกข้อมูลเพื่อค้นหาและเช็คสถานะรายการสั่งซื้อพรีออเดอร์</p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input 
+                        type="text" 
+                        id="sheetSearchInput" 
+                        placeholder="กรอกชื่อลูกค้า, รหัสสั่งซื้อ หรือชื่อสินค้า..." 
+                        class="flex-1 px-4 py-2.5 bg-pink-50/30 border border-pink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff85b3] focus:bg-white text-sm text-[#5c3a21]"
+                    >
+                    <button 
+                        onclick="searchTrackData()" 
+                        class="bg-[#ff85b3] hover:bg-[#ff6b9e] text-white font-medium px-5 py-2.5 rounded-xl text-sm transition shadow-sm"
+                    >
+                        ค้นหา
+                    </button>
+                </div>
+                <div class="mt-2 text-[11px] text-pink-400 flex justify-between px-1">
+                    <span>*ดึงข้อมูลอัพเดทอัตโนมัติจาก Sheets</span>
+                    <span id="sheetLoadStatus">กำลังเตรียมข้อมูล...</span>
+                </div>
+
+                <div id="sheetSearchLoading" class="hidden text-center py-6 text-sm text-[#7b5338]">
+                    <div class="animate-spin inline-block w-6 h-6 border-2 border-[#ff85b3] border-t-transparent rounded-full mb-1"></div>
+                    <p>กำลังค้นหาข้อมูล...</p>
+                </div>
+
+                <div id="sheetSearchResultContainer" class="mt-4 space-y-3">
+                    </div>
+
+                <div id="sheetSearchNoResult" class="hidden mt-4 bg-pink-50/30 rounded-xl border border-dashed border-pink-200 p-6 text-center text-sm text-pink-400">
+                    📭 ไม่พบข้อมูลรายการสั่งซื้อพรีออเดอร์ของคุณในขณะนี้
+                </div>
+            </div>
+
             <div id="portfolio" class="mb-10 bg-[#5c3a21] rounded-2xl p-6 text-center shadow-md relative overflow-hidden">
                 <h3 class="font-slackey text-white text-2xl font-medium mb-5">link</h3>
                 <div class="flex flex-col gap-3">
@@ -198,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- Pricing & Conditions -->
             <div id="pricing" class="mb-10">
                 <div class="bg-white rounded-2xl p-6 border border-pink-100 shadow-sm">
                     <h3 class="text-center font-slackey text-2xl text-[#5c3a21] mb-4">เรทราคา & ข้อตกลง</h3>
@@ -220,7 +247,6 @@
                 </div>
             </div>
 
-            <!-- Rules -->
             <div class="mb-10">
                 <h3 class="font-slackey text-2xl font-semibold mb-4 text-[#5c3a21]">กฎ & การชำระรอบสอง</h3>
                 <div class="bg-[#f9f9f9] p-5 rounded-2xl text-[14px] space-y-3 border border-gray-100 text-[#5c3a21] leading-relaxed">
@@ -231,7 +257,6 @@
                 </div>
             </div>
 
-            <!-- Contact Section -->
             <div id="contact" class="mt-12 pt-8 border-t border-pink-100 text-center">
                 <h3 class="font-slackey text-2xl text-[#5c3a21] mb-5">📱 ช่องทางติดต่อ</h3>
                 <div class="flex justify-center gap-5 mb-8">
@@ -283,6 +308,148 @@
         }
 
         setInterval(nextSlide, 4000);
+
+        // ==========================================
+        //  โค้ดระบบดึงข้อมูลพรีออเดอร์จาก Google Sheet
+        // ==========================================
+        const trackingCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhvWlV5f4VLTm4wt98CqwolduxcfjQKdWtJ-9PbnXyWkHTdjDB-JRkcTYCPzrhaXwNKpzlxvf0RWqi/pub?output=csv";
+        let sheetPreOrders = [];
+
+        function parseCsvTrackingData(text) {
+            let lines = [];
+            let row = [""];
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                let next = text[i+1];
+                if (c === '"') {
+                    if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
+                    else { inQuotes = !inQuotes; }
+                } else if (c === ',' && !inQuotes) {
+                    row.push('');
+                } else if ((c === '\r' || c === '\n') && !inQuotes) {
+                    if (c === '\r' && next === '\n') { i++; }
+                    lines.push(row);
+                    row = [''];
+                } else {
+                    row[row.length - 1] += c;
+                }
+            }
+            if (row.length > 1 || row[0] !== '') { lines.push(row); }
+            return lines;
+        }
+
+        async function fetchPreOrderSheet() {
+            try {
+                const response = await fetch(trackingCsvUrl);
+                const dataText = await response.text();
+                const parsedData = parseCsvTrackingData(dataText);
+                
+                if (parsedData.length < 2) return;
+                const headers = parsedData[0].map(h => h.trim());
+                
+                sheetPreOrders = parsedData.slice(1).map(row => {
+                    let order = {};
+                    headers.forEach((header, index) => {
+                        order[header] = row[index] ? row[index].trim() : '';
+                    });
+                    return order;
+                }).filter(order => Object.values(order).some(val => val !== ''));
+
+                document.getElementById('sheetLoadStatus').innerText = "เชื่อมต่อชีตแล้ว ✨";
+            } catch (error) {
+                console.error("Error loading tracking data:", error);
+                document.getElementById('sheetLoadStatus').innerText = "❌ เชื่อมต่อล้มเหลว";
+            }
+        }
+
+        function searchTrackData() {
+            const keyword = document.getElementById('sheetSearchInput').value.toLowerCase().trim();
+            const container = document.getElementById('sheetSearchResultContainer');
+            const noResult = document.getElementById('sheetSearchNoResult');
+            const loading = document.getElementById('sheetSearchLoading');
+
+            container.innerHTML = '';
+            noResult.classList.add('hidden');
+
+            if (keyword === '') {
+                alert('กรอกชื่อแอคเคาท์ 🔍');
+                return;
+            }
+
+            loading.classList.remove('hidden');
+
+            setTimeout(() => {
+                const filtered = sheetPreOrders.filter(order => {
+                    return Object.values(order).some(value => 
+                        value.toLowerCase().includes(keyword)
+                    );
+                });
+
+                loading.classList.add('hidden');
+
+                if (filtered.length === 0) {
+                    noResult.classList.remove('hidden');
+                    return;
+                }
+
+                filtered.forEach(order => {
+                    let detailsHTML = '';
+                    let statusColor = 'bg-gray-100 text-[#5c3a21] border border-gray-200'; 
+                    let statusKey = Object.keys(order).find(k => k.includes('สถานะ') || k.toLowerCase().includes('status'));
+                    
+                    if (statusKey) {
+                        const statusVal = order[statusKey];
+                        if (statusVal.includes('ดีลแล้ว') || statusVal.includes('จัดส่งในเกาหลี') || statusVal.includes('ถึงไทย')) {
+                            statusColor = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                        } else if (statusVal.includes('รอเว็บจัดส่ง') || statusVal.includes('ถึงชิปปิ้ง') || statusVal.includes('ส่งกลับไทย')) {
+                            statusColor = 'bg-amber-50 text-amber-700 border border-amber-200';
+                        } else if (statusVal.includes('จัดส่งเรียบร้อย') || statusVal.includes('เลขพัสดุ')) {
+                            statusColor = 'bg-rose-50 text-rose-700 border border-rose-200';
+                        }
+                    }
+
+                    Object.keys(order).forEach(key => {
+                        if (key === statusKey) {
+                            detailsHTML += `
+                                <div class="flex justify-between py-1.5 border-b border-pink-100/50 items-center text-xs">
+                                    <span class="text-[#7b5338] font-medium">${key}</span>
+                                    <span class="px-2.5 py-0.5 rounded-full font-semibold ${statusColor}">${order[key]}</span>
+                                </div>`;
+                        } else {
+                            detailsHTML += `
+                                <div class="flex justify-between py-1.5 border-b border-pink-100/50 text-xs">
+                                    <span class="text-[#7b5338]">${key}</span>
+                                    <span class="text-[#5c3a21] font-medium text-right ml-4">${order[key] || '-'}</span>
+                                </div>`;
+                        }
+                    });
+
+                    const card = `
+                        <div class="bg-pink-50/40 rounded-xl border border-pink-200 p-4 shadow-xs transition-all">
+                            <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-pink-200/50">
+                                <span class="text-[#ff85b3] font-bold text-xs flex items-center gap-1">
+                                    🛒 รายการคำสั่งซื้อที่พบ
+                                </span>
+                            </div>
+                            <div class="space-y-0.5">
+                                ${detailsHTML}
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            }, 300);
+        }
+
+        document.getElementById('sheetSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchTrackData();
+            }
+        });
+
+        // ดึงข้อมูลชีตเมื่อเบราว์เซอร์เปิดเว็บ
+        fetchPreOrderSheet();
     </script>
 </body>
 </html>
