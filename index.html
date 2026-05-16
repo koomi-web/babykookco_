@@ -82,19 +82,19 @@
             </div>
             <div class="space-y-2.5 font-medium text-[#5c3a21] flex-1 overflow-y-auto pr-1">
                 <a href="#services" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
-                    <span class="text-[#ff85b3]">🌷</span> บริการต่างๆ
+                    <span class="text-[#ff85b3]">📌</span> บริการต่างๆ
                 </a>
                 <a href="#stock-section" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
-                    <span class="text-[#ff85b3]">🛒</span> ตะกร้าสินค้าที่ว่าง
+                    <span class="text-[#ff85b3]">⬛</span> ตะกร้าสินค้าที่ว่าง
                 </a>
                 <a href="#portfolio" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
                     <span class="text-[#ff85b3]">📦</span> update สินค้า
                 </a>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSfpmTQ3z04gDLAXzCOj_ADzcg0pWmLk0ZfjNoD2QGAG6ZYbjA/viewform?" target="_blank" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
-                    <span class="text-[#ff85b3]">📂</span> ฟอร์มฝากหา
+                    <span class="text-[#ff85b3]">📝</span> ฟอร์มฝากหา
                 </a>
                 <button onclick="toggleMenu(); openPaymentModal();" class="w-full flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px] font-medium text-[#5c3a21] text-left cursor-pointer">
-                    <span class="text-[#ff85b3]">💌</span> ชำระส่วนที่เหลือ
+                    <span class="text-[#ff85b3]">💵</span> ชำระส่วนที่เหลือ
                 </button>
                 <a href="#pricing" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
                     <span class="text-[#ff85b3]">💳</span> เรทราคา & ข้อตกลง
@@ -690,17 +690,17 @@
 
                 rows.forEach(row => {
                     const cells = row.c;
-                    // ลำดับดึงค่า: title (0), image_url (1), single_price (2), pair_price (3), member_price (4), stock_quantity (5), status (6)
+                    // ดึงค่าตามคอลัมน์ของคุณ: title (0), image_url (1), single_price (2), pair_price (3), member_price (4), stock_quantity (5), status (6)
                     const title = cells[0] ? cells[0].v : 'ไม่มีชื่อสินค้า';
                     const imageUrl = cells[1] ? cells[1].v : '';
                     const singlePrice = cells[2] ? parseFloat(cells[2].v) : 0;
                     const pairPrice = cells[3] ? parseFloat(cells[3].v) : null;
                     const memberPrice = cells[4] ? parseFloat(cells[4].v) : null;
                     const stockQuantity = cells[5] ? parseInt(cells[5].v) : 0;
-                    const status = cells[6] ? cells[6].v : 'active';
+                    const status = cells[6] ? String(cells[6].v).toLowerCase().trim() : 'active';
 
-                    // ถ้าสถานะไม่ใช่ active ให้ข้ามตัวนี้ไป ไม่ต้องแสดงหน้าเว็บ
-                    if (status !== 'active') return;
+                    // ตรวจเช็คสถานะปิดใช้งาน หรือคัดออกถ้าตรงตามเงื่อนไข
+                    if (status === 'หมด' || status === 'private' || status === 'close') return;
 
                     const isOutOfStock = stockQuantity <= 0;
                     
@@ -709,14 +709,14 @@
                         stockBadge = `<span class="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-full text-[10px] font-medium flex-shrink-0">⚠️ สินค้าหมด</span>`;
                     }
 
-                    // สร้างชุดปุ่มคำสั่งซื้อตามราคาที่มี
+                    // สร้างชุดปุ่มคำสั่งซื้อตามข้อมูลราคาที่มีจริง
                     let actionButtonsHTML = '';
                     if (isOutOfStock) {
                         actionButtonsHTML = `<button type="button" disabled class="px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-xl text-xs text-gray-400 font-medium cursor-not-allowed">❌ สินค้าหมดชั่วคราว</button>`;
                     } else {
-                        actionButtonsHTML += `<button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${singlePrice}, 1, 'แยก 1 ใบ')" class="px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5c3a21] hover:border-[#ff85b3] hover:bg-pink-50 transition cursor-pointer font-medium">👤 ซื้อแยกใบ (${singlePrice}฿)</button>`;
-                        if (pairPrice) {
-                            actionButtonsHTML += ` <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${pairPrice}, 1, 'เหมาคู่')" class="px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5c3a21] hover:border-[#ff85b3] hover:bg-pink-50 transition cursor-pointer font-medium">👥 ซื้อเหมาคู่ (${pairPrice}฿)</button>`;
+                        actionButtonsHTML += `<button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${singlePrice}, 1, 'แยก 1 ใบ')" class="px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5c3a21] hover:border-[#ff85b3] hover:bg-pink-50 transition cursor-pointer font-medium font-sans">👤 ซื้อแยกใบ (${singlePrice}฿)</button>`;
+                        if (pairPrice && pairPrice > 0) {
+                            actionButtonsHTML += ` <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${pairPrice}, 1, 'เหมาคู่')" class="px-3 py-1.5 bg-white border border-pink-200 rounded-xl text-xs text-[#5c3a21] hover:border-[#ff85b3] hover:bg-pink-50 transition cursor-pointer font-medium font-sans">👥 ซื้อเหมาคู่ (${pairPrice}฿)</button>`;
                         }
                     }
 
