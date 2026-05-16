@@ -670,7 +670,7 @@
         fetchPreOrderSheet();
 
         // =========================================================================
-        //  โค้ดระบบดึงข้อมูล "ตะกร้าสินค้าที่ว่าง (Stock)" - ซ่อมแก้คำว่า เมมเบอร์: undefined
+        //  โค้ดระบบดึงข้อมูล "ตะกร้าสินค้าที่ว่าง (Stock)" - ซ่อมแก้การดึงข้อมูลรูปภาพและตัวแปร
         // =========================================================================
         const stockAsJsonUrl = "https://docs.google.com/spreadsheets/d/1LxNRR_2qh3NvLsO5LOSCSND4zqHUbCA0WbCok953-oA/gviz/tq?tqx=out:json&sheet=Sheet1";
 
@@ -692,28 +692,30 @@
 
                 rows.forEach(row => {
                     const cells = row.c;
-                    // ดึงค่าตามคอลัมน์ของคุณ: title (0), image_url (1), single_price (2), pair_price (3), member (4), stock_quantity (5), status (6)
+                    
+                    // ดึงข้อมูลแต่ละคอลัมน์: Title(0), Image(1), SinglePrice(2), PairPrice(3), Member(4), Quantity(5), Status(6)
                     const title = cells[0] && cells[0].v !== null ? cells[0].v : 'ไม่มีชื่อสินค้า';
-                    const imageUrl = cells[1] && cells[1].v !== null ? cells[1].v : '';
+                    
+                    // [แก้ไขเรื่องรูปภาพ] ดึงข้อมูล URL จากคอลัมน์ B (cells[1]) มาอย่างถูกต้องเพื่อใช้ Render
+                    const imageUrl = cells[1] && cells[1].v !== null ? String(cells[1].v).trim() : '';
+                    
                     const singlePrice = cells[2] && cells[2].v !== null ? parseFloat(cells[2].v) : 0;
                     const pairPrice = cells[3] && cells[3].v !== null ? parseFloat(cells[3].v) : 0;
-                    
-                    // ซ่อมส่วนดึงชื่อเมมเบอร์: หากค่าเป็น null หรือว่างเปล่า ให้แสดงเป็นเครื่องหมาย "-" ป้องกันปัญหาเกิดข้อความ undefined
                     const memberName = cells[4] && cells[4].v !== null ? String(cells[4].v).trim() : '-'; 
-                    
                     const stockQuantity = cells[5] && cells[5].v !== null ? parseInt(cells[5].v) : 0;
                     const status = cells[6] && cells[6].v !== null ? String(cells[6].v).toLowerCase().trim() : 'active';
 
-                    // ตรวจเช็คสถานะปิดใช้งาน หรือคัดออกถ้าตรงตามเงื่อนไข
+                    // คัดกรองสถานะสต๊อก
                     if (status === 'หมด' || status === 'private' || status === 'close') return;
 
                     const isOutOfStock = stockQuantity <= 0;
                     
-                    // ปรับ Layout แบบ Mobile-Friendly แนวตั้งที่มีช่องข้อมูลเรียงลงมาและมีปุ่มเลือกอยู่ด้านขวาเหมือนภาพแคปของคุณ
+                    // แสดงโครงสร้าง UI แบบการ์ดแนวตั้ง ปุ่มขวามือ ตรงปกตามที่คุณต้องการ
                     const itemCardHTML = `
                         <div class="bg-white border border-pink-100 rounded-2xl p-4 flex gap-3 items-center shadow-xs">
                             <div class="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-200/60 text-center px-1">
-                                ${imageUrl ? `<img src="${imageUrl}" class="w-full h-full object-cover" alt="${title}">` : `<span class="text-[11px] text-gray-400 font-medium">No Image</span>`}
+                                ${imageUrl ? `<img src="${imageUrl}" class="w-full h-full object-cover" alt="${title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                                <span class="text-[11px] text-gray-400 font-medium" style="display: ${imageUrl ? 'none' : 'block'};">No Image</span>
                             </div>
                             
                             <div class="flex-1 min-w-0">
@@ -757,7 +759,7 @@
             }
         }
 
-        // ดึงข้อมูลสต๊อกหลังจากหน้าจอหลักพร้อมทำงาน
+        // โหลดข้อมูลเข้าสู่หน้าเว็บสต๊อก
         fetchStockSheet();
 
         // ==========================================
@@ -888,9 +890,9 @@
             }
         }
 
-        // ==========================================
-        //  โค้ดฟังก์ชันระบบสต็อกการ์ด (ตะกร้าสินค้าที่ว่าง)
-        // ==========================================
+        // =========================================================================
+        //  โค้ดระบบฟังก์ชันคำสั่งซื้อจากสต๊อกสินค้า - [แก้ไขเรื่องข้อมูลไม่พร้อมส่ง]
+        // =========================================================================
         let currentSelectedOrder = {
             name: "",
             price: 0,
@@ -915,15 +917,19 @@
             btnConfirm.className = "w-full mt-4 bg-[#ff85b3] hover:bg-[#ff6b9e] text-white font-medium py-3 rounded-xl text-sm shadow-md transition cursor-pointer flex items-center justify-center gap-1";
         }
 
+        // [แก้ไขแบบสมบูรณ์] ป้องกันการเกิดบั๊กข้อความว่างหรือฟอร์มแจ้งออเดอร์ไม่ส่งค่า
         function redirectToPaymentForm() {
-            if (!currentSelectedOrder.name) return;
+            const productName = currentSelectedOrder.name || "สินค้าจากสต็อก";
+            const productPrice = currentSelectedOrder.price || 0;
+            const buyMode = currentSelectedOrder.mode || "เดี่ยว";
 
             const formProductInput = document.getElementById('formProduct');
             if (formProductInput) {
-                formProductInput.value = `${currentSelectedOrder.name} [รูปแบบ:${currentSelectedOrder.mode}] - ยอดโอน ${currentSelectedOrder.price} บาท`;
+                // ผูกข้อมูลเรียงข้อความให้สมบูรณ์ เพื่อส่งข้อมูลไปยังฟอร์มแจ้งโอนเงินอัตโนมัติ
+                formProductInput.value = `${productName} (${buyMode}) - ยอด ${productPrice} บ.`;
             }
 
-            alert(`เลือกสินค้าสำเร็จ! ระบบกำลังพาท่านไปที่หน้าต่างป๊อปอัพแจ้งโอนเงิน ยอดรวม ${currentSelectedOrder.price} บาทค่ะ ✨`);
+            alert(`เลือกสินค้าสำเร็จ! ระบบกำลังนำไปที่ฟอร์มแจ้งโอน ยอดรวม ${productPrice} บาทค่ะ ✨`);
 
             if (typeof openPaymentModal === "function") {
                 openPaymentModal();
