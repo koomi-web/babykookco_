@@ -209,8 +209,7 @@
                     <p>กำลังค้นหาข้อมูล...</p>
                 </div>
 
-                <div id="sheetSearchResultContainer" class="mt-4 space-y-3">
-                    </div>
+                <div id="sheetSearchResultContainer" class="mt-4 space-y-3"></div>
 
                 <div id="sheetSearchNoResult" class="hidden mt-4 bg-pink-50/30 rounded-xl border border-dashed border-pink-200 p-6 text-center text-sm text-pink-400">
                     📭 ไม่พบข้อมูลรายการสั่งซื้อของคุณในขณะนี้
@@ -292,7 +291,7 @@
                     <p>ตรวจสอบ ยอดโอนส่วนที่เหลือได้ที่ช่องอัพเดทในเว็บหน้าแรก</p>
                     <p>🛵 ยอดที่แจ้งรวมค่าส่งในไทยแล้ว เดย์จัดส่งด้วยไปรษณีย์ไทยส่งแบบ EMS ทุกออเดอร์</p>
                     <p class="text-rose-600 bg-white/80 p-2.5 rounded-xl border border-rose-100 font-medium">
-                        ⚠️ ถ้าต้องการเปลี่ยนชื่อ ที่อยู่หลังจากกรอกเว็บไปแล้วให้ติดต่อไลน์ร้านนะคะ
+                        ⚠️ ถ้าต้องการเปลี่ยนชื่อ ที่อยู่ยังไม่ต้องแจ้งนะคะ เมื่อของถึงไทยจะแท็กแจ้งให้ทราบอีกครั้งเพื่อกรอกที่อยู่ใหม่อีกรอบสำหรับจัดส่ง
                     </p>
                     <p class="text-[11px] pt-1 border-t border-pink-200/60 text-center font-medium">
                         ♡ หากสงสัยส่วนไหนหรือต้องการสอบถามเพิ่มเติม line ได้ที่ @239qjiby
@@ -566,9 +565,9 @@
         fetchPreOrderSheet();
 
         // ==========================================
-        //  โค้ดระบบแจ้งชำระเงินและแจ้งสลิปแบบฟอร์มหน้า 2
+        //  โค้ดระบบแจ้งชำระเงินและแจ้งสลิป (ใส่ลิงก์ปัจจุบันของคุณแล้ว)
         // ==========================================
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbw20WeIxFAEutu6-8uUY2gevWXlUl7BQRAJOkq1Ten2COsxv0Tkd77daNV99iFZA-UVnQ/exec";
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyQeAnJ6YJ8YheKQHFEzD8Q17uBzq-p1r61xb3GQgDmU7eYJDlJRl486Bj_07szp0jJ3g/exec";
         let base64Slip = "";
 
         function openPaymentModal() {
@@ -590,7 +589,6 @@
                 step2.classList.add('hidden');
             } else if (stepNumber === 2) {
                 step1.classList.add('hidden');
-                step2.xl.remove('hidden'); // แก้ไขส่วนที่สะกดผิดของเดิมให้สมบูรณ์
                 step2.classList.remove('hidden');
             }
         }
@@ -657,28 +655,26 @@
             }
         }
 
-        // 📍 [ที่ตั้งโค้ดส่วนที่ 2] ฟังก์ชันสำหรับคัดลอกเลขบัญชีอัตโนมัติ
+        // ฟังก์ชันสำหรับคัดลอกเลขบัญชีอัตโนมัติ
         function copyAccountNumber() {
             const accountNumber = "136-3-09572-7";
             const copyBtn = document.getElementById('copyBtn');
             
-            // คัดลอกเลขเข้าคลิปบอร์ดแบบรองรับทั้งมือถือและคอมพิวเตอร์
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(accountNumber).then(onSuccess, onFailure);
             } else {
-                // ระบบสำรองในกรณีเบราว์เซอร์เก่า
-                const textArea = document.createElement("textarea");
-                textArea.value = accountNumber;
-                textArea.style.position = "fixed"; 
-                document.body.appendChild(textArea);
-                textArea.select();
+                const textWithArea = document.createElement("textarea");
+                textWithArea.value = accountNumber;
+                textWithArea.style.position = "fixed"; 
+                document.body.appendChild(textWithArea);
+                textWithArea.select();
                 try {
                     document.execCommand('copy');
                     onSuccess();
                 } catch (err) {
                     onFailure();
                 }
-                document.body.removeChild(textArea);
+                document.body.removeChild(textWithArea);
             }
 
             function onSuccess() {
@@ -699,3 +695,4 @@
     </script>
 </body>
 </html>
+
