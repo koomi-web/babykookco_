@@ -189,33 +189,113 @@
                 </ul>
             </div>
 
-            <div id="stock-section" class="mb-10 bg-white rounded-2xl border border-pink-200 p-5 sm:p-6 shadow-sm">
-                <h3 class="font-slackey text-2xl font-semibold mb-2 flex items-center gap-2 text-[#ff85b3]">
-                    🛒 ตะกร้าสินค้าที่ว่าง (Stock)
-                </h3>
-                <p class="text-xs text-[#7b5338] mb-6">กดสั่งซื้อได้เลยนะคะ</p>
+           <div id="stock-section" class="mb-10 bg-white rounded-2xl border border-pink-200 p-5 sm:p-6 shadow-sm">
+    <h3 class="font-slackey text-2xl font-semibold mb-2 flex items-center gap-2 text-[#ff85b3]">
+        🛒 ตะกร้าสินค้าที่ว่าง (Stock)
+    </h3>
+    <p class="text-xs text-[#7b5338] mb-6">กดสั่งซื้อได้เลยนะคะ</p>
 
-                <div id="dynamicStockContainer" class="space-y-6">
-                    <div class="text-center py-6 text-sm text-[#7b5338]">
-                        <div class="animate-spin inline-block w-6 h-6 border-2 border-[#ff85b3] border-t-transparent rounded-full mb-1"></div>
-                        <p>กำลังโหลดสินค้าจากสต๊อก...</p>
-                    </div>
-                </div>
+    <div id="dynamicStockContainer" class="space-y-6">
+        <div class="text-center py-6 text-sm text-[#7b5338]">
+            <div class="animate-spin inline-block w-6 h-6 border-2 border-[#ff85b3] border-t-transparent rounded-full mb-1"></div>
+            <p>กำลังโหลดสินค้าจากสต๊อก...</p>
+        </div>
+    </div>
 
-                <div id="stockSummaryBox" class="hidden mt-6 bg-pink-50/40 border border-dashed border-pink-300 rounded-2xl p-4 space-y-2">
-                    <div class="flex justify-between text-xs text-[#7b5338]">
-                        <span>สินค้าที่เลือก:</span>
-                        <span id="sumItemName" class="font-semibold text-[#5c3a21]">-</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-[#7b5338]">
-                        <span>รูปแบบการซื้อ:</span>
-                        <span id="sumItemMode" class="font-semibold text-rose-500">-</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-pink-200/60">
-                        <span class="text-sm font-medium text-[#5c3a21]">ยอดชำระเงินสุทธิ:</span>
-                        <span class="text-lg font-mono font-bold text-[#ff85b3]"><span id="sumItemPrice">0</span> ฿</span>
-                    </div>
-                </div>
+    <div id="stockSummaryBox" class="hidden mt-6 bg-pink-50/40 border border-dashed border-pink-300 rounded-2xl p-4 space-y-2">
+        <div class="flex justify-between text-xs text-[#7b5338]">
+            <span>สินค้าที่เลือก:</span>
+            <span id="sumItemName" class="font-semibold text-[#5c3a21]">-</span>
+        </div>
+        <div class="flex justify-between text-xs text-[#7b5338]">
+            <span>รูปแบบการซื้อ:</span>
+            <span id="sumItemMode" class="font-semibold text-rose-500">-</span>
+        </div>
+        <div class="flex justify-between items-center pt-2 border-t border-pink-200/60">
+            <span class="text-sm font-medium text-[#5c3a21]">ยอดชำระเงินสุทธิ:</span>
+            <span class="text-lg font-mono font-bold text-[#ff85b3]"><span id="sumItemPrice">0</span> ฿</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // เชื่อมต่อลิงก์ Web App ที่ให้มาโดยตรง
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4u_OWhdgJ4JM_OteehJVszSbCiwMtJjdsAoCrH_ETQ-mPWKSsm3inSUUrrUWI-G5_/exec";
+
+    function loadStockData() {
+        const container = document.getElementById('dynamicStockContainer');
+        
+        fetch(SCRIPT_URL)
+            .then(response => response.json())
+            .then(data => {
+                // ถ้าไม่มีข้อมูล หรือชื่อหัวตารางใน Sheets ไม่ตรง หรือสคริปต์ส่งค่าว่างกลับมา []
+                if (!data || data.error || data.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-6 text-sm text-rose-500 font-medium">
+                            ❌ ไม่พบข้อมูลสินค้าในระบบสต๊อก<br>
+                            <span class="text-xs text-gray-400 font-normal">(กรุณาเช็กชื่อหัวตารางใน Google Sheets หรือกด Deploy สคริปต์เวอร์ชันใหม่)</span>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = ''; // เคลียร์สถานะกำลังโหลด
+
+                // วนลูปแสดงรายการสินค้าที่ดึงมาจาก Google Sheets
+                data.forEach(item => {
+                    const isOutOfStock = item.stock <= 0;
+                    const stockText = isOutOfStock ? 'หมดแล้วค่ะ' : `คงเหลือ ${item.stock} ชิ้น`;
+                    
+                    const itemHtml = `
+                        <div class="flex items-center gap-4 p-3 border border-pink-100 rounded-xl bg-pink-50/10 hover:bg-pink-50/30 transition-all">
+                            <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 border border-pink-100">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150?text=No+Image';">
+                            </div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-medium text-sm text-[#5c3a21] truncate">${item.name}</h4>
+                                <p class="text-xs text-gray-400 mt-0.5">${stockText}</p>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="text-xs bg-white border border-pink-200 text-[#ff85b3] px-2 py-0.5 rounded-md font-mono">เดี่ยว: ${item.prices.single}฿</span>
+                                    <span class="text-xs bg-white border border-pink-200 text-[#ff85b3] px-2 py-0.5 rounded-md font-mono">คู่: ${item.prices.pair}฿</span>
+                                    <span class="text-xs bg-white border border-pink-200 text-rose-400 px-2 py-0.5 rounded-md font-mono">เมม: ${item.prices.member}฿</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button onclick="selectItemForOrder('${item.id}', '${item.name}', ${JSON.stringify(item.prices)})" 
+                                        ${isOutOfStock ? 'disabled' : ''} 
+                                        class="px-4 py-1.5 rounded-xl text-xs font-semibold shadow-sm transition-all ${isOutOfStock ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#ff85b3] text-white hover:bg-[#ff6b9f]'}}">
+                                    ${isOutOfStock ? 'หมด' : 'เลือก'}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', itemHtml);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="text-center py-6 text-sm text-rose-500 font-medium">
+                        ❌ เกิดข้อผิดพลาดในการเชื่อมต่อกับระบบหลังบ้าน
+                    </div>`;
+            });
+    }
+
+    // ฟังก์ชันเมื่อคลิกเลือกซื้อสินค้า
+    function selectItemForOrder(id, name, prices) {
+        document.getElementById('sumItemName').innerText = name;
+        document.getElementById('sumItemMode').innerText = "ราคาเดี่ยว (เริ่มต้น)"; 
+        document.getElementById('sumItemPrice').innerText = prices.single;
+        
+        // เปิดแสดงกล่องสรุปเงินด้านล่าง
+        document.getElementById('stockSummaryBox').classList.remove('hidden');
+    }
+
+    // สั่งให้ระบบเริ่มดึงข้อมูลสต๊อกทันทีเมื่อเปิดหน้าเว็บ
+    document.addEventListener('DOMContentLoaded', loadStockData);
+</script>
+
 
                 <button type="button" id="btnConfirmStockPurchase" disabled onclick="redirectToPaymentForm()" class="w-full mt-4 bg-gray-200 text-gray-400 font-medium py-3 rounded-xl text-sm transition flex items-center justify-center gap-1 cursor-not-allowed">
                     🛍️ กรุณาคลิกเลือกสินค้าชิ้นที่ต้องการด้านบน
