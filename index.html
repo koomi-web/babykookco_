@@ -84,9 +84,6 @@
                 <a href="#services" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
                     <span class="text-[#ff85b3]">📌</span> บริการต่างๆ
                 </a>
-                <a href="#stock-section" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
-                    <span class="text-[#ff85b3]">🛒</span> ต้ากร้าสินค้าที่ว่าง
-                </a>
                 <a href="#portfolio" onclick="toggleMenu()" class="flex items-center gap-3 p-2.5 hover:bg-pink-50 rounded-xl transition text-[14px]">
                     <span class="text-[#ff85b3]">📦</span> update สินค้า
                 </a>
@@ -187,41 +184,6 @@
                     <li class="flex items-center gap-3 bg-pink-50/50 p-3 rounded-xl">🛫 ชิปปิ้งเกาหลี ขีดละ 45฿</li>
                     <li class="flex items-center gap-3 bg-pink-50/50 p-3 rounded-xl">🔍 ฝากหาการ์ด เรท 0.030</li>
                 </ul>
-            </div>
-
-            <div id="stock-section" class="mb-10 bg-white rounded-2xl border border-pink-200 p-5 sm:p-6 shadow-sm">
-                <h3 class="font-slackey text-2xl font-semibold mb-2 flex items-center gap-2 text-[#ff85b3]">
-                    🛒 ตะกร้าสินค้าที่ว่าง (Stock)
-                </h3>
-                <p class="text-xs text-[#7b5338] mb-6">กดสั่งซื้อได้เลยนะคะ</p>
-
-                <div id="dynamicStockContainer" class="space-y-4">
-                    <div class="text-center py-6 text-sm text-[#7b5338]">
-                        <div class="animate-spin inline-block w-6 h-6 border-2 border-[#ff85b3] border-t-transparent rounded-full mb-1"></div>
-                        <p>กำลังโหลดสินค้าจากสต๊อก...</p>
-                    </div>
-                </div>
-
-                <div id="stockSummaryBox" class="hidden mt-6 bg-pink-50/40 border border-dashed border-pink-300 rounded-2xl p-4 space-y-2">
-                    <div class="flex justify-between text-xs text-[#7b5338]">
-                        <span>สินค้าที่เลือก:</span>
-                        <span id="sumItemName" class="font-semibold text-[#5c3a21]">-</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-[#7b5338]">
-                        <span>รูปแบบการซื้อ:</span>
-                        <span id="sumItemMode" class="font-semibold text-rose-500">-</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-pink-200/60">
-                        <span class="text-sm font-medium text-[#5c3a21]">ยอดชำระเงินสุทธิ:</span>
-                        <span class="text-lg font-mono font-bold text-[#ff85b3]"><span id="sumItemPrice">0</span> ฿</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-10">
-                <button type="button" id="btnConfirmStockPurchase" disabled onclick="redirectToPaymentForm()" class="w-full mt-4 bg-gray-200 text-gray-400 font-medium py-3 rounded-xl text-sm transition flex items-center justify-center gap-1 cursor-not-allowed">
-                    🛍️ กรุณาคลิกเลือกสินค้าชิ้นที่ต้องการด้านบน
-                </button>
             </div>
 
             <div class="mb-10 bg-white rounded-2xl border border-pink-200 p-5 shadow-sm">
@@ -669,99 +631,6 @@
         // ดึงข้อมูลชีตเมื่อเบราว์เซอร์เปิดเว็บ
         fetchPreOrderSheet();
 
-        // =========================================================================
-        //  โค้ดระบบดึงข้อมูล "ตะกร้าสินค้าที่ว่าง (Stock)" - ซ่อมแก้การดึงข้อมูลรูปภาพและตัวแปร
-        // =========================================================================
-        const stockAsJsonUrl = "https://docs.google.com/spreadsheets/d/1LxNRR_2qh3NvLsO5LOSCSND4zqHUbCA0WbCok953-oA/gviz/tq?tqx=out:json&sheet=Sheet1";
-
-        async function fetchStockSheet() {
-            const container = document.getElementById('dynamicStockContainer');
-            try {
-                const response = await fetch(stockAsJsonUrl);
-                const dataText = await response.text();
-                const jsonString = dataText.substring(47, dataText.length - 2);
-                const json = JSON.parse(jsonString);
-                
-                const rows = json.table.rows;
-                if (!rows || rows.length === 0) {
-                    container.innerHTML = `<p class="text-center text-xs text-pink-400">📭 ยังไม่มีสินค้าในสต๊อกขณะนี้</p>`;
-                    return;
-                }
-
-                container.innerHTML = ''; // เคลียร์ข้อความกำลังโหลด
-
-                rows.forEach(row => {
-                    const cells = row.c;
-                    
-                    // ดึงข้อมูลแต่ละคอลัมน์: Title(0), Image(1), SinglePrice(2), PairPrice(3), Member(4), Quantity(5), Status(6)
-                    const title = cells[0] && cells[0].v !== null ? cells[0].v : 'ไม่มีชื่อสินค้า';
-                    
-                    // [แก้ไขเรื่องรูปภาพ] ดึงข้อมูล URL จากคอลัมน์ B (cells[1]) มาอย่างถูกต้องเพื่อใช้ Render
-                    const imageUrl = cells[1] && cells[1].v !== null ? String(cells[1].v).trim() : '';
-                    
-                    const singlePrice = cells[2] && cells[2].v !== null ? parseFloat(cells[2].v) : 0;
-                    const pairPrice = cells[3] && cells[3].v !== null ? parseFloat(cells[3].v) : 0;
-                    const memberName = cells[4] && cells[4].v !== null ? String(cells[4].v).trim() : '-'; 
-                    const stockQuantity = cells[5] && cells[5].v !== null ? parseInt(cells[5].v) : 0;
-                    const status = cells[6] && cells[6].v !== null ? String(cells[6].v).toLowerCase().trim() : 'active';
-
-                    // คัดกรองสถานะสต๊อก
-                    if (status === 'หมด' || status === 'private' || status === 'close') return;
-
-                    const isOutOfStock = stockQuantity <= 0;
-                    
-                    // แสดงโครงสร้าง UI แบบการ์ดแนวตั้ง ปุ่มขวามือ ตรงปกตามที่คุณต้องการ
-                    const itemCardHTML = `
-                        <div class="bg-white border border-pink-100 rounded-2xl p-4 flex gap-3 items-center shadow-xs">
-                            <div class="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-200/60 text-center px-1">
-                                ${imageUrl ? `<img src="${imageUrl}" class="w-full h-full object-cover" alt="${title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
-                                <span class="text-[11px] text-gray-400 font-medium" style="display: ${imageUrl ? 'none' : 'block'};">No Image</span>
-                            </div>
-                            
-                            <div class="flex-1 min-w-0">
-                                <h4 class="font-bold text-[13px] text-[#5c3a21] truncate mb-1">${title}</h4>
-                                <p class="text-[11px] text-[#7b5338] mb-0.5">คงเหลือ ${stockQuantity} ชิ้น</p>
-                                
-                                <div class="space-y-1">
-                                    <div class="border border-pink-200/80 bg-white px-2.5 py-0.5 rounded-lg flex justify-between items-center max-w-[140px]">
-                                        <span class="text-[11px] text-pink-400">เดี่ยว :</span>
-                                        <span class="text-[11px] font-mono font-semibold text-pink-500">${singlePrice}฿</span>
-                                    </div>
-                                    <div class="border border-pink-200/80 bg-white px-2.5 py-0.5 rounded-lg flex justify-between items-center max-w-[140px]">
-                                        <span class="text-[11px] text-pink-400">คู่ :</span>
-                                        <span class="text-[11px] font-mono font-semibold text-pink-500">${pairPrice > 0 ? pairPrice + '฿' : '0฿'}</span>
-                                    </div>
-                                    <div class="border border-pink-200/80 bg-white px-2.5 py-0.5 rounded-lg flex justify-between items-center max-w-[140px]">
-                                        <span class="text-[11px] text-pink-400">เมม :</span>
-                                        <span class="text-[11px] font-medium text-pink-500 truncate pl-1">${memberName}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col gap-1.5 justify-center">
-                                ${isOutOfStock ? `
-                                    <button type="button" disabled class="px-3 py-1.5 bg-gray-100 text-gray-400 rounded-xl text-xs font-semibold cursor-not-allowed">หมด</button>
-                                ` : `
-                                    <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${singlePrice}, 1, 'แยกใบ (เดี่ยว)')" class="px-3 py-1.5 bg-[#ff85b3] text-white hover:bg-[#ff6b9e] rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer">เลือก</button>
-                                    ${pairPrice > 0 ? `
-                                        <button type="button" onclick="selectStockItem('${title.replace(/'/g, "\\'")}', ${pairPrice}, 1, 'เหมา (คู่)')" class="px-3 py-1.5 bg-[#ffb8d1] text-[#5c3a21] hover:bg-[#ff85b3] hover:text-white rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer">เลือกคู่</button>
-                                    ` : ''}
-                                `}
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += itemCardHTML;
-                });
-
-            } catch (error) {
-                console.error("Error fetching stock sheet:", error);
-                container.innerHTML = `<p class="text-center text-xs text-rose-500">❌ เกิดข้อผิดพลาดในการโหลดข้อมูลสต๊อกสินค้า</p>`;
-            }
-        }
-
-        // โหลดข้อมูลเข้าสู่หน้าเว็บสต๊อก
-        fetchStockSheet();
-
         // ==========================================
         //  โค้ดระบบแจ้งชำระเงินและแจ้งสลิป
         // ==========================================
@@ -887,52 +756,6 @@
 
             function onFailure() {
                 alert("ไม่สามารถคัดลอกอัตโนมัติได้ กรุณาคลุมดำคัดลอกด้วยตนเองนะคะ: " + accountNumber);
-            }
-        }
-
-        // =========================================================================
-        //  โค้ดระบบฟังก์ชันคำสั่งซื้อจากสต๊อกสินค้า - [แก้ไขเรื่องข้อมูลไม่พร้อมส่ง]
-        // =========================================================================
-        let currentSelectedOrder = {
-            name: "",
-            price: 0,
-            qty: 0,
-            mode: ""
-        };
-
-        function selectStockItem(itemName, price, qty, buyMode) {
-            currentSelectedOrder.name = itemName;
-            currentSelectedOrder.price = price;
-            currentSelectedOrder.qty = qty;
-            currentSelectedOrder.mode = buyMode;
-
-            document.getElementById('stockSummaryBox').classList.remove('hidden');
-            document.getElementById('sumItemName').innerText = itemName;
-            document.getElementById('sumItemMode').innerText = buyMode;
-            document.getElementById('sumItemPrice').innerText = price.toLocaleString();
-
-            const btnConfirm = document.getElementById('btnConfirmStockPurchase');
-            btnConfirm.disabled = false;
-            btnConfirm.innerText = "🛍️ ยืนยันคำสั่งซื้อ & ไปหน้าแจ้งโอนเงิน";
-            btnConfirm.className = "w-full mt-4 bg-[#ff85b3] hover:bg-[#ff6b9e] text-white font-medium py-3 rounded-xl text-sm shadow-md transition cursor-pointer flex items-center justify-center gap-1";
-        }
-
-        // [แก้ไขแบบสมบูรณ์] ป้องกันการเกิดบั๊กข้อความว่างหรือฟอร์มแจ้งออเดอร์ไม่ส่งค่า
-        function redirectToPaymentForm() {
-            const productName = currentSelectedOrder.name || "สินค้าจากสต็อก";
-            const productPrice = currentSelectedOrder.price || 0;
-            const buyMode = currentSelectedOrder.mode || "เดี่ยว";
-
-            const formProductInput = document.getElementById('formProduct');
-            if (formProductInput) {
-                // ผูกข้อมูลเรียงข้อความให้สมบูรณ์ เพื่อส่งข้อมูลไปยังฟอร์มแจ้งโอนเงินอัตโนมัติ
-                formProductInput.value = `${productName} (${buyMode}) - ยอด ${productPrice} บ.`;
-            }
-
-            alert(`เลือกสินค้าสำเร็จ! ระบบกำลังนำไปที่ฟอร์มแจ้งโอน ยอดรวม ${productPrice} บาทค่ะ ✨`);
-
-            if (typeof openPaymentModal === "function") {
-                openPaymentModal();
             }
         }
 
